@@ -8,9 +8,8 @@ import (
 func HttpHandler() *mux.Router {
 	router := mux.NewRouter()
 
-	// define routes
-	helloRoute := route.NewHelloWorld()
-	router.HandleFunc("/", helloRoute.GetHelloWorld).Methods("GET")
+	uploadRoute := route.NewFileUploadRoute()
+	router.HandleFunc("/api/v1/upload", uploadRoute.UploadFile).Methods("POST")
 
 	return router
 }
