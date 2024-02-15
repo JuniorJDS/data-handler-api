@@ -55,8 +55,8 @@ func NewUserData(
 
 	return &UserData{
 		CPF:                  cpf,
-		Private:              *isPrivate,
-		Incompleto:           *isIncompleto,
+		Private:              isPrivate,
+		Incompleto:           isIncompleto,
 		DataDaUltimaCompra:   formattedDataDaUltimaCompra,
 		TicketMedio:          formattedTicketMedio,
 		TicketDaUltimaCompra: formattedTicketDaUltimaCompra,
@@ -66,15 +66,15 @@ func NewUserData(
 }
 
 // TODO: levar para um utils
-func stringToBool(data string) (*bool, error) {
+func stringToBool(data string) (bool, error) {
 	var isData bool
 
 	isData, err := strconv.ParseBool(data)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 
-	return &isData, err
+	return isData, err
 }
 
 func stringToValidString(data string) string {

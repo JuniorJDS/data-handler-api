@@ -4,13 +4,14 @@ import (
 	"context"
 	"log"
 
+	configs "github.com/JuniorJDS/data-handler-api/config"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var db *pgxpool.Pool
 
 func ConnectDB() *pgxpool.Pool {
-	config, err := pgxpool.ParseConfig("")
+	config, err := pgxpool.ParseConfig(configs.GetSettings()["POSTGRES"])
 	if err != nil {
 		log.Panicf("Failed to create config to database connection: %v\n", err)
 	}

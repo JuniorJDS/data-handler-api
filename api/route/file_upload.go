@@ -11,7 +11,9 @@ type FileUploadRoute struct {
 }
 
 func NewFileUploadRoute() *FileUploadRoute {
-	return &FileUploadRoute{}
+	return &FileUploadRoute{
+		FileService: *service.NewFileHandler(),
+	}
 }
 
 func (fr *FileUploadRoute) UploadFile(w http.ResponseWriter, r *http.Request) {

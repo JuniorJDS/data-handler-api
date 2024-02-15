@@ -7,12 +7,17 @@ import (
 	"strings"
 
 	"github.com/JuniorJDS/data-handler-api/entity"
+	"github.com/JuniorJDS/data-handler-api/repository"
 )
 
-type FileHandler struct{}
+type FileHandler struct {
+	UserRepository repository.UserRepository
+}
 
 func NewFileHandler() *FileHandler {
-	return &FileHandler{}
+	return &FileHandler{
+		UserRepository: *repository.NewUserRepository(),
+	}
 }
 
 func (fh *FileHandler) Process(file io.Reader) error {
@@ -31,6 +36,9 @@ func (fh *FileHandler) Process(file io.Reader) error {
 		userData = append(userData, *user)
 	}
 
-	fmt.Println(userData)
+	err := fh.UserRepository.InsertManyRows(userData)
+	if err != nil {
+		return err
+	}
 	return nil
 }
