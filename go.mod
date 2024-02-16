@@ -7,6 +7,8 @@ require (
 	github.com/urfave/negroni v1.0.0
 )
 
+require github.com/paemuri/brdoc/v2 v2.3.3 // indirect
+
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
