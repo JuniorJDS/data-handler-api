@@ -19,7 +19,7 @@ func NewUserRepository() *UserRepository {
 	}
 }
 
-func (u *UserRepository) InsertManyRows(data []entity.UserData) error {
+func (u *UserRepository) InsertManyRows(data <-chan *entity.UserData) error {
 	query := `
 		INSERT INTO userdata
 		(cpf, private, incompleto, datadaultimacompra, ticketmedio, ticketdaultimacompra, lojamaisfrequente, lojadaultimacompra, isvalidcpforcnpj) 
@@ -31,16 +31,16 @@ func (u *UserRepository) InsertManyRows(data []entity.UserData) error {
 	datadaultimacompraAux, ticketmedioAux, ticketdaultimacompraAux := []time.Time{}, []*float64{}, []*float64{}
 	lojamaisfrequenteAux, lojadaultimacompraAux := []string{}, []string{}
 	isValidCPForCNPJ := []bool{}
-	for _, userData := range data {
-		cpfAux = append(cpfAux, userData.CPF)
-		privateAux = append(privateAux, userData.Private)
-		incompletoAux = append(incompletoAux, userData.Incompleto)
-		datadaultimacompraAux = append(datadaultimacompraAux, userData.DataDaUltimaCompra)
-		ticketmedioAux = append(ticketmedioAux, userData.TicketMedio)
-		ticketdaultimacompraAux = append(ticketdaultimacompraAux, userData.TicketDaUltimaCompra)
-		lojamaisfrequenteAux = append(lojamaisfrequenteAux, userData.LojaMaisFrequente)
-		lojadaultimacompraAux = append(lojadaultimacompraAux, userData.LojaDaUltimaCompra)
-		isValidCPForCNPJ = append(isValidCPForCNPJ, userData.IsValidCPForCNPJ)
+	for d := range data {
+		cpfAux = append(cpfAux, d.CPF)
+		privateAux = append(privateAux, d.Private)
+		incompletoAux = append(incompletoAux, d.Incompleto)
+		datadaultimacompraAux = append(datadaultimacompraAux, d.DataDaUltimaCompra)
+		ticketmedioAux = append(ticketmedioAux, d.TicketMedio)
+		ticketdaultimacompraAux = append(ticketdaultimacompraAux, d.TicketDaUltimaCompra)
+		lojamaisfrequenteAux = append(lojamaisfrequenteAux, d.LojaMaisFrequente)
+		lojadaultimacompraAux = append(lojadaultimacompraAux, d.LojaDaUltimaCompra)
+		isValidCPForCNPJ = append(isValidCPForCNPJ, d.IsValidCPForCNPJ)
 	}
 
 	if _, err := u.db.Exec(

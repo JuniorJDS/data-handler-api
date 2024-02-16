@@ -2,9 +2,9 @@ package service
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"strings"
+	"sync"
 
 	"github.com/JuniorJDS/data-handler-api/entity"
 	"github.com/JuniorJDS/data-handler-api/repository"
@@ -24,28 +24,43 @@ func (fh *FileHandler) Process(file io.Reader) error {
 	s := bufio.NewScanner(file)
 	s.Scan() // skip first row
 
-	var userData []entity.UserData
+	var wg sync.WaitGroup
+
+	rows := make(chan *entity.UserData)
+	tokens := make(chan struct{}, 50)
+
 	for s.Scan() {
+		wg.Add(1)
+		tokens <- struct{}{}
 		row := strings.Fields(s.Text())
 
-		user, err := entity.NewUserData(
-			row[0],
-			row[1],
-			row[2],
-			row[3],
-			row[4],
-			row[5],
-			row[6],
-			row[7],
-		)
-		if err != nil {
-			fmt.Println(err)
-		}
+		go func(row []string) {
+			defer wg.Done()
+			user, err := entity.NewUserData(
+				row[0],
+				row[1],
+				row[2],
+				row[3],
+				row[4],
+				row[5],
+				row[6],
+				row[7],
+			)
+			if err != nil {
+				return
+			}
 
-		userData = append(userData, *user)
+			<-tokens
+			rows <- user
+		}(row)
 	}
 
-	err := fh.UserRepository.InsertManyRows(userData)
+	go func() {
+		wg.Wait()
+		close(rows)
+	}()
+
+	err := fh.UserRepository.InsertManyRows(rows)
 	if err != nil {
 		return err
 	}
