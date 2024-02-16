@@ -1,21 +1,21 @@
 package entity
 
 import (
-	"strconv"
-	"strings"
-)
+	"time"
 
-const NULLVALUE = "NULL"
+	"github.com/JuniorJDS/data-handler-api/utils"
+)
 
 type UserData struct {
 	CPF                  string
 	Private              bool
 	Incompleto           bool
-	DataDaUltimaCompra   string
+	DataDaUltimaCompra   time.Time
 	TicketMedio          *float64
 	TicketDaUltimaCompra *float64
 	LojaMaisFrequente    string
 	LojaDaUltimaCompra   string
+	IsValidCPForCNPJ     bool
 }
 
 func NewUserData(
@@ -28,33 +28,38 @@ func NewUserData(
 	lojaMaisFrequente,
 	lojaDaUltimaCompra string,
 ) (*UserData, error) {
-	isPrivate, err := stringToBool(private)
+	formattedCPFCNPJ, isValidCPForCNPJ := utils.FormatCPFAndCNPJ(cpf)
+
+	isPrivate, err := utils.StringToBool(private)
 	if err != nil {
 		return nil, err
 	}
 
-	isIncompleto, err := stringToBool(incompleto)
+	isIncompleto, err := utils.StringToBool(incompleto)
 	if err != nil {
 		return nil, err
 	}
 
-	formattedDataDaUltimaCompra := stringToValidString(dataDaUltimaCompra)
-
-	formattedTicketMedio, err := stringToFloat(ticketMedio)
+	formattedDataDaUltimaCompra, err := utils.StringToDate(dataDaUltimaCompra)
 	if err != nil {
 		return nil, err
 	}
 
-	formattedTicketDaUltimaCompra, err := stringToFloat(ticketDaUltimaCompra)
+	formattedTicketMedio, err := utils.StringToFloat(ticketMedio)
 	if err != nil {
 		return nil, err
 	}
 
-	formattedLojaMaisFrequente := stringToValidString(lojaMaisFrequente)
-	formattedLojaDaUltimaCompra := stringToValidString(lojaDaUltimaCompra)
+	formattedTicketDaUltimaCompra, err := utils.StringToFloat(ticketDaUltimaCompra)
+	if err != nil {
+		return nil, err
+	}
+
+	formattedLojaMaisFrequente, _ := utils.FormatCPFAndCNPJ(lojaMaisFrequente)
+	formattedLojaDaUltimaCompra, _ := utils.FormatCPFAndCNPJ(lojaDaUltimaCompra)
 
 	return &UserData{
-		CPF:                  cpf,
+		CPF:                  formattedCPFCNPJ,
 		Private:              isPrivate,
 		Incompleto:           isIncompleto,
 		DataDaUltimaCompra:   formattedDataDaUltimaCompra,
@@ -62,41 +67,6 @@ func NewUserData(
 		TicketDaUltimaCompra: formattedTicketDaUltimaCompra,
 		LojaMaisFrequente:    formattedLojaMaisFrequente,
 		LojaDaUltimaCompra:   formattedLojaDaUltimaCompra,
+		IsValidCPForCNPJ:     isValidCPForCNPJ,
 	}, nil
-}
-
-// TODO: levar para um utils
-func stringToBool(data string) (bool, error) {
-	var isData bool
-
-	isData, err := strconv.ParseBool(data)
-	if err != nil {
-		return false, err
-	}
-
-	return isData, err
-}
-
-func stringToValidString(data string) string {
-	if data == NULLVALUE {
-		return ""
-	}
-
-	return data
-}
-
-func stringToFloat(data string) (*float64, error) {
-	var floatData float64
-
-	if data == NULLVALUE {
-		return nil, nil
-	}
-
-	data = strings.Replace(data, ",", ".", 1)
-	floatData, err := strconv.ParseFloat(data, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	return &floatData, nil
 }
