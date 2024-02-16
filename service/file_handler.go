@@ -28,7 +28,16 @@ func (fh *FileHandler) Process(file io.Reader) error {
 	for s.Scan() {
 		row := strings.Fields(s.Text())
 
-		user, err := entity.NewUserData(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+		user, err := entity.NewUserData(
+			row[0],
+			row[1],
+			row[2],
+			row[3],
+			row[4],
+			row[5],
+			row[6],
+			row[7],
+		)
 		if err != nil {
 			fmt.Println(err)
 		}
