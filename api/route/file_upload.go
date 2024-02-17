@@ -22,6 +22,7 @@ func (fr *FileUploadRoute) UploadFile(w http.ResponseWriter, r *http.Request) {
 	// err := r.ParseMultipartForm(32 << 20)
 	file, _, err := r.FormFile("file")
 	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
