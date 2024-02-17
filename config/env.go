@@ -3,12 +3,17 @@ package configs
 import (
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
 
 func GetSettings() map[string]string {
-	err := godotenv.Load()
+	ignoreEnviroment, err := strconv.ParseBool(os.Getenv("IGNORE_ENVIRONMENT"))
+	if !ignoreEnviroment {
+		err = godotenv.Load()
+	}
+
 	if err != nil {
 		log.Panicf("Error loading .env file: %v\n", err)
 	}

@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  postgres-ts:
+    image: postgres:16
+    container_name: postgres-data-handler
+    environment:
+      - POSTGRES_PASSWORD=data_api
+      - POSTGRES_USER=data_api
+      - POSTGRES_DB=user_data
+    volumes:
+      - ./infra/initDb.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "5432:5432"
+
+  app-test:
+    build:
+      context: ./
+      dockerfile: tests.Dockerfile
+    container_name: fs-tests
+    environment:
+      - IGNORE_ENVIRONMENT=1
+      - POSTGRES=user=data_api password=data_api host=postgres-data-handler port=5432 dbname=user_data
+    depends_on:
+      - postgres-ts
+    command:
+      [
+        "./infra/wait-for-it.sh",
+        "postgres-data-handler:5432",
+        "--",
+        "go",
+        "test",
+        "./tests/e2e/",
+        "-v",
+      ]
