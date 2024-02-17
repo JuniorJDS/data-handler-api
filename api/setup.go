@@ -5,7 +5,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func HttpHandler() *mux.Router {
+func HTTPHandler() *mux.Router {
 	router := mux.NewRouter()
 
 	uploadRoute := route.NewFileUploadRoute()

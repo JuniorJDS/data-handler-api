@@ -22,14 +22,6 @@ func StringToBool(data string) (bool, error) {
 	return isData, err
 }
 
-func StringToValidString(data string) string {
-	if data == NULL {
-		return ""
-	}
-
-	return data
-}
-
 func FormatCPFAndCNPJ(value string) (string, bool) {
 	if value == NULL {
 		return "", false

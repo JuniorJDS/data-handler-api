@@ -18,8 +18,8 @@ func NewFileUploadRoute() *FileUploadRoute {
 
 func (fr *FileUploadRoute) UploadFile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader(http.StatusOK)
-	r.ParseMultipartForm(32 << 20)
+
+	// err := r.ParseMultipartForm(32 << 20)
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		return
@@ -27,7 +27,6 @@ func (fr *FileUploadRoute) UploadFile(w http.ResponseWriter, r *http.Request) {
 
 	defer file.Close()
 
-	// path := fmt.Sprintf("/%s", fileHeader.Filename)
 	err = fr.FileService.Process(file)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
