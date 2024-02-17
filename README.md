@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Golang-v1.21.6-blue"/>
-  <img src="https://github.com/JuniorJDS/data-handler-api/actions/workflows/e2e.yaml/badge.svg">
+  <img src="https://github.com/JuniorJDS/data-handler-api/actions/workflows/e2e_tests.yaml/badge.svg">
   <img src="https://github.com/JuniorJDS/data-handler-api/actions/workflows/golangci-lint.yaml/badge.svg">
 </p>
 
