@@ -19,7 +19,7 @@ func NewUserRepository() *UserRepository {
 	}
 }
 
-func (u *UserRepository) InsertManyRows(data <-chan *entity.UserData) error {
+func (u *UserRepository) InsertManyRows(data []entity.UserData) error {
 	query := `
 		INSERT INTO userdata
 		(cpf, private, incompleto, datadaultimacompra, ticketmedio, ticketdaultimacompra, lojamaisfrequente, lojadaultimacompra, isvalidcpforcnpj) 
@@ -31,7 +31,7 @@ func (u *UserRepository) InsertManyRows(data <-chan *entity.UserData) error {
 	datadaultimacompraAux, ticketmedioAux, ticketdaultimacompraAux := []time.Time{}, []*float64{}, []*float64{}
 	lojamaisfrequenteAux, lojadaultimacompraAux := []string{}, []string{}
 	isValidCPForCNPJ := []bool{}
-	for d := range data {
+	for _, d := range data {
 		cpfAux = append(cpfAux, d.CPF)
 		privateAux = append(privateAux, d.Private)
 		incompletoAux = append(incompletoAux, d.Incompleto)

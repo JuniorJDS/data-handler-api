@@ -36,7 +36,7 @@ func (fh *FileHandler) Process(file io.Reader) error {
 
 		go func(row []string) {
 			defer wg.Done()
-			user, err := entity.NewUserData(
+			user, _ := entity.NewUserData(
 				row[0],
 				row[1],
 				row[2],
@@ -46,9 +46,9 @@ func (fh *FileHandler) Process(file io.Reader) error {
 				row[6],
 				row[7],
 			)
-			if err != nil {
-				return
-			}
+			// if err != nil {
+			// 	return
+			// }
 
 			<-tokens
 			rows <- user
@@ -60,7 +60,12 @@ func (fh *FileHandler) Process(file io.Reader) error {
 		close(rows)
 	}()
 
-	err := fh.UserRepository.InsertManyRows(rows)
+	var result []entity.UserData
+	for row := range rows {
+		result = append(result, *row)
+	}
+
+	err := fh.UserRepository.InsertManyRows(result)
 	if err != nil {
 		return err
 	}
