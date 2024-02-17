@@ -20,15 +20,15 @@ services:
     environment:
       - IGNORE_ENVIRONMENT=1
       - POSTGRES=user=data_api password=data_api host=postgres-data-handler port=5432 dbname=user_data
-
     depends_on:
       - postgres-ts
     command:
       [
+        "./infra/wait-for-it.sh",
         "postgres-data-handler:5432",
         "--",
         "go",
         "test",
-        "./tests/integration/",
+        "./tests/e2e/",
         "-v",
       ]

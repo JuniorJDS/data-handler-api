@@ -1,4 +1,4 @@
-FROM golang:1.21.5
+FROM golang:1.21.6
 
 # Create a non-root user called "appuser"
 RUN useradd -m -s /bin/bash appuser
