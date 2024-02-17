@@ -42,13 +42,13 @@ func (b *BaseTest) appClient(verbHTTP, pathEndpoint string, body io.Reader, writ
 
 	response := httptest.NewRecorder()
 
-	handler := api.HttpHandler()
+	handler := api.HTTPHandler()
 	handler.ServeHTTP(response, request)
 
 	return response, nil
 }
 
-func (b *BaseTest) TearDownTest() error {
+func (b *BaseTest) TearDownTest() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -56,9 +56,8 @@ func (b *BaseTest) TearDownTest() error {
 
 	_, err := b.database.Exec(ctx, query)
 	if err != nil {
-		return err
+		fmt.Println("Error to truncate table userdata. Error: ", err.Error())
 	}
-	return nil
 }
 
 func (b *BaseTest) createFileMultipartPayload(filePath string) (*bytes.Buffer, *multipart.Writer, error) {

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	handler := api.HttpHandler()
+	handler := api.HTTPHandler()
 
 	err := app.Start("5000", handler)
 	if err != nil {

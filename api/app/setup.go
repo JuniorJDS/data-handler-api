@@ -17,7 +17,6 @@ type ServerOption func(server *http.Server)
 const TIMEOUT = 30 * time.Second
 
 func Start(port string, handler http.Handler, options ...ServerOption) error {
-
 	newHandler := negroni.New()
 	newHandler.Use(negroni.NewLogger())
 	newHandler.UseHandler(handler)
@@ -64,10 +63,4 @@ func WithWriteTimeout(t time.Duration) ServerOption {
 	return func(srv *http.Server) {
 		srv.WriteTimeout = t
 	}
-}
-
-func MyMiddleware(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	log.Println("running before MyMiddleware")
-	next(rw, r)
-	log.Println("running after MyMiddleware")
 }

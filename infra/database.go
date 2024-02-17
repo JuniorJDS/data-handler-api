@@ -24,7 +24,6 @@ func ConnectDB() *pgxpool.Pool {
 		log.Panicf("Failed to connectin database: %v\n", err)
 	}
 	return conn
-
 }
 
 func GetDB() *pgxpool.Pool {
