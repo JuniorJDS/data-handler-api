@@ -11,3 +11,15 @@ services:
       - ./infra/initDb.sql:/docker-entrypoint-initdb.d/database.sql
     ports:
       - "5432:5432"
+  app-api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: data-handler-api
+    ports:
+      - "5000:5000"
+    environment:
+      - IGNORE_ENVIRONMENT=1
+      - POSTGRES=user=data_api password=data_api host=postgres-data-handler port=5432 dbname=user_data
+    depends_on:
+      - postgres-ts
