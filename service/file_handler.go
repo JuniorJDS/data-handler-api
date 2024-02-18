@@ -3,12 +3,15 @@ package service
 import (
 	"bufio"
 	"io"
+	"log"
 	"strings"
 	"sync"
 
 	"github.com/JuniorJDS/data-handler-api/entity"
 	"github.com/JuniorJDS/data-handler-api/repository"
 )
+
+const maxTokens = 50
 
 type FileHandler struct {
 	UserRepository repository.UserRepository
@@ -27,7 +30,7 @@ func (fh *FileHandler) Process(file io.Reader) error {
 	var wg sync.WaitGroup
 
 	rows := make(chan *entity.UserData)
-	tokens := make(chan struct{}, 50)
+	tokens := make(chan struct{}, maxTokens)
 
 	for s.Scan() {
 		wg.Add(1)
@@ -36,7 +39,7 @@ func (fh *FileHandler) Process(file io.Reader) error {
 
 		go func(row []string) {
 			defer wg.Done()
-			user, _ := entity.NewUserData(
+			user, err := entity.NewUserData(
 				row[0],
 				row[1],
 				row[2],
@@ -46,9 +49,10 @@ func (fh *FileHandler) Process(file io.Reader) error {
 				row[6],
 				row[7],
 			)
-			// if err != nil {
-			// 	return
-			// }
+			if err != nil {
+				log.Printf("Error creating UserData: %v", err)
+				return
+			}
 
 			<-tokens
 			rows <- user
@@ -65,8 +69,7 @@ func (fh *FileHandler) Process(file io.Reader) error {
 		result = append(result, *row)
 	}
 
-	err := fh.UserRepository.InsertManyRows(result)
-	if err != nil {
+	if err := fh.UserRepository.InsertManyRows(result); err != nil {
 		return err
 	}
 	return nil

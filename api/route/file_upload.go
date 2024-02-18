@@ -19,7 +19,6 @@ func NewFileUploadRoute() *FileUploadRoute {
 func (fr *FileUploadRoute) UploadFile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	// err := r.ParseMultipartForm(32 << 20)
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
