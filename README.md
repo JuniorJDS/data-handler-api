@@ -29,3 +29,14 @@ make local-environment
 
 Abrir um postman e fazer uma requisição POST localhost:5000/api/v1/upload passando um file, como na figura abaixo
 ![Exemplo Postman](./postman-file-upload-example.png)
+
+Caso queira visualizar os dados inseridos, basta utilizar essas credenciais:
+`user=data_api, password=data_api, host=localhost, port=5432, dbname=user_data`
+
+### Testes:
+
+Para rodar os testes basta utilizar o comando `make`:
+
+```
+make e2e-tests
+```
