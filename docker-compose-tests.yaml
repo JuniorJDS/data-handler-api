@@ -16,7 +16,7 @@ services:
     build:
       context: ./
       dockerfile: tests.Dockerfile
-    container_name: fs-tests
+    container_name: data-handler-tests
     environment:
       - IGNORE_ENVIRONMENT=1
       - POSTGRES=user=data_api password=data_api host=postgres-data-handler port=5432 dbname=user_data

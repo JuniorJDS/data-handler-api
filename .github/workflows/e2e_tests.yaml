@@ -8,11 +8,11 @@ on:
       - "release-**"
 
 jobs:
-  integration-tests:
+  e2e-tests:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - name: Execute Tests
         working-directory: ./
-        run: make integration-tests
+        run: make e2e-tests
