@@ -12,25 +12,20 @@ Código escrito na linguagem <a href="https://go.dev/" target="_blank">Golang</a
 
 ## Como Executar:
 
-É possível executar a API, tal como seus testes, através do Docker ou no ambiente local, também foi criado um arquivo `Make` para facilitar algumas execuções. Além disso, para as execuções fora do Docker, atente-se para o arquivo `.env` que deve estar na pasta raiz do projeto. Caso deseje debugar os testes, também deve ter um arquivo `.env` na pasta `/tests/integration`.
+É possível executar a API, tal como seus testes, através do Docker ou no ambiente local, também foi criado um arquivo `Make` para facilitar algumas execuções. Além disso, para as execuções fora do Docker, atente-se para o arquivo `.env` que deve estar na pasta raiz do projeto. Caso deseje debugar os testes, também deve ter um arquivo `.env` na pasta `/tests/e2e`.
 
 ### Comandos Make:
 
-- `make run-local-environment`: Inicia a API através do Docker, juntamente com os outros serviços necessários;
-- `make run`: Inicia, unicamente, a API;
-- `make integration-tests`: Inicia um ambiente no Docker e roda todos os testes de integração;
+- `make local-environment`: Inicia a API através do Docker, juntamente com os outros serviços necessários;
+- `make e2e-tests`: Inicia um ambiente no Docker e roda todos os testes de integração;
 
 ### Docker:
 
-Para rodar utilizando o Docker, basta subir o arquivo `docker-compose-run-local.yaml` com o docker-compose:
+Para rodar utilizando o Docker, basta utilizar o comando `make`:
 
 ```
-docker-compose -f docker-compose-run-local.yaml build
-docker-compose -f docker-compose-run-local.yaml up
+make local-environment
 ```
 
-ou utilizando o comando `make`:
-
-```
-make run-local-environment
-```
+Abrir um postman e fazer uma requisição POST localhost:5000/api/v1/upload passando um file, como na figura abaixo
+![Exemplo Postman](./postman-file-upload-example.png)
